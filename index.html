@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahendra Cloth House</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    
+ 
+
+    .title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid red;
+  box-shadow: 0 0 30px yellow;
+  background-color: #2dbaabfe;
+  color: #0d3970fe;
+  padding: 10px 15px;
+  font-size: 25px;
+  font-weight: bold;
+}
+.title-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;       /* टेक्स्ट कभी टूटेगा नहीं */
+  overflow: hidden;          /* extra टेक्स्ट छुप जाएगा */
+  text-overflow: ellipsis;   /* बहुत लंबा हुआ तो ... दिखेगा */
+  max-width: 70%;            /* ताकि Help और menu से टकराए नहीं */
+  text-align: center;
+}
+    .help {
+      position: absolute;
+      right: 15px;   
+      background: #fff;
+      color: blue;
+      padding: 5px 12px;
+      border-radius: 5px;
+      font-size: 20px;
+      font-weight: 600;
+      box-shadow: 0 0 5px gray;
+      cursor: pointer;
+      white-space: nowrap; 
+       font-weight: bold;
+    }
+    .help:active{
+      color: white;
+      background-color: black;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 600px) {
+      .title {
+        font-size: 18px;
+        padding: 8px 12px;
+      }
+      .help {
+        font-size: 18px;
+        padding: 4px 10px;
+      }
+    }
+    .logo{
+      width: 100%;
+      height: auto;
+      margin-bottom:0;
+    }
+    .no{
+width: 100%;
+height: 10px;
+background-color: white;
+box-shadow:inset 0 0 7px black;  
+margin-top: -5px;
+}
+  .no2{
+width: 100%;
+height: 5px;
+background-color: white;
+box-shadow:inset 0 0 4px black;  
+
+}
+.slider{
+    position:relative;
+    width:100%;
+  
+  height: 500PX;
+    overflow:hidden;
+    
+    box-shadow:0 6px 25px rgba(0,0,0,0.2);
+    background:#000;
+  }
+  .slides{
+    display:flex;
+    width:100%;
+    height:100%;
+    transition:transform 0.6s ease;
+  }
+  .slide{
+    min-width:100%;
+    height:100%;
+  }
+  .slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  /* buttons */
+  .btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.5);
+    border:none;
+    color:#fff;
+    font-size:32px;
+    padding:8px 14px;
+    cursor:pointer;
+    border-radius:6px;
+    z-index:10;
+  }
+  .btn:hover{ background:rgba(0,0,0,0.7); }
+  .prev{ left:10px; }
+  .next{ right:10px; }
+  
+
+
+
+nav {
+  background: #0d3970fe;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between; /* बराबर फैल जाएंगे */
+  align-items: center;
+}
+
+nav ul li {
+  flex: 1;                 /* हर item बराबर space ले */
+  text-align: center;      /* बीच में text */
+  padding: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  white-space: nowrap;     
+  min-width: 50px;         
+  height: 30px;
+  line-height: 30px;
+  box-shadow: 0 0 5px white;
+}
+
+nav ul li:hover {
+  background: #2dbaabfe;
+  color: yellow;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  nav ul li {
+    padding: 8px;
+    font-size: 14px;   /* अपने आप छोटा हो जाएगा */
+  }
+}
+
+/* Dropdown छुपाना */
+nav ul li ul {
+  display: none;
+  position: absolute;  
+  background: #0d3970fe;
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  min-width: 120px;
+  box-shadow: 0 0 5px black;
+  z-index: 100;
+  text-align: center;
+}
+
+/* Dropdown के अंदर li */
+nav ul li ul li {
+  padding: 10px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: none;
+  font-size: 18px;
+  
+}
+
+/* Hover पर दिखे */
+nav ul li:hover > ul {
+  display: block;
+}
+
+/* Dropdown hover effect */
+nav ul li ul li:hover {
+  background: #2dbaabfe;
+  color: yellow;
+}
+
+
+
+
+/* ======= Side Menu Panel (Vertical) ======= */
+.menu-panel {
+  position: fixed;
+  top: 0;
+  left: -250px;       /* शुरू में छुपा हुआ */
+  width: 250px;       
+  height: 100%;       
+  background-color: lightyellow;
+  overflow-y: auto;
+  transition: left 0.4s ease;
+  z-index: 200;
+  padding-top: 10px;
+  border: 2px solid black;
+  
+}
+
+/* Active होने पर दिखाई दे */
+.menu-panel.active {
+  left: 0;
+  box-shadow: 0 30px 80px black;
+}
+
+/* Links style */
+.menu-panel a {
+  display: block;
+  color: black;
+  text-decoration: none;
+  font-size: 17px;
+  padding: 15px 20px;
+  border-bottom: 1px solid gray;
+  transition: 0.3s;
+  margin-top: 0;
+}
+
+.menu-panel a:hover {
+  background: #2dbaabfe;
+  color: yellow;
+}
+
+h3{
+  padding: 10px;
+  box-shadow: inset 0 0 10px red;
+}
+ .all-img {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* हमेशा 2 div एक लाइन में */
+  gap: 5px; /* div के बीच spacing */
+  padding: 5px;
+  background-color: gray;
+}
+
+.img1 {
+  background-color: black;
+  
+  width: 100%;          /* parent grid cell के हिसाब से फैलेगा */
+  border: 2px solid white;
+  height: 350px;
+} 
+  </style>
+</head>
+<body>
+<div class="title">
+  <img src="menu.png" width="25px" height="25px">
+  <div class="menu-panel" id="menuPanel">
+    <h3>Mahendra Cloth House</h3>
+  <a href="#about"> About Us ➡️</a>
+  <a href="#contact">  Contact Us ➡️</a>
+</div>
+  <span class="title-text">Mahendra Cloth House</span>
+  <div class="help">Help</div>
+</div>
+  <img src="logo.png" class="logo">
+  <div class="no"></div>
+  
+<div class="slider">
+  <div class="slides" id="slides"></div>
+  <button class="btn prev" id="prev">‹</button>
+  <button class="btn next" id="next">›</button>
+</div>
+  <div class="no2"></div>
+<nav>
+  <ul>
+    <li>Home</li>
+    <li>My Order</li>
+    <li>Category 🔽
+    <ul>
+      <li>Man</li>
+      <li>Women</li>
+      <li>Girl</li>
+      <li>Boy</li>
+      
+    </ul>
+    </li>
+    <li>Favourites</li>
+    
+  </ul>
+</nav>  
+  <div class="no2"></div>
+  
+  <div class="all-img">
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    <div class="img1"></div>
+    
+    
+    
+    
+    
+    
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  <script>
+  // यहाँ अपनी images डाल दो
+  const images = [
+    "https://picsum.photos/id/1015/900/450",
+    "https://picsum.photos/id/1016/900/450",
+    "https://picsum.photos/id/1018/900/450",
+    "https://picsum.photos/id/1024/900/450"
+  ];
+
+  const slidesEl = document.getElementById("slides");
+  images.forEach(src=>{
+    const s = document.createElement("div");
+    s.className="slide";
+    s.innerHTML=`<img src="${src}" alt="">`;
+    slidesEl.appendChild(s);
+  });
+
+  let current = 0;
+  const total = images.length;
+
+  function update(){
+    slidesEl.style.transform = `translateX(-${current*100}%)`;
+  }
+
+  function next(){
+    current = (current+1)%total;
+    update();
+  }
+  function prev(){
+    current = (current-1+total)%total;
+    update();
+  }
+
+  document.getElementById("next").addEventListener("click",next);
+  document.getElementById("prev").addEventListener("click",prev);
+
+  // Auto-play हर 3 सेकंड में
+  setInterval(next,3000);
+
+  update();
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  const menuIcon = document.querySelector(".title img");
+const menuPanel = document.getElementById("menuPanel");
+
+// Menu open/close toggle
+menuIcon.addEventListener("click", (e) => {
+  e.stopPropagation();  // click event ऊपर ना जाए
+  menuPanel.classList.toggle("active");
+});
+
+// बाहर click करने पर menu बंद
+document.addEventListener("click", (e) => {
+  if (menuPanel.classList.contains("active") && !menuPanel.contains(e.target) && e.target !== menuIcon) {
+    menuPanel.classList.remove("active");
+  }
+});
+
+
+
+
+const galleryImages = [
+  "https://picsum.photos/id/1015/900/450",
+  "https://picsum.photos/id/1016/900/450",
+  "https://picsum.photos/id/1018/900/450",
+  "https://picsum.photos/id/1024/900/450",
+  "https://picsum.photos/id/1025/900/450",
+  "https://picsum.photos/id/1032/900/450",
+  "https://picsum.photos/id/1033/900/450",
+  "https://picsum.photos/id/1035/900/450"
+];
+
+// Assign images to grid
+document.querySelectorAll(".img1").forEach((div, i) => {
+  div.style.backgroundImage = `url(${galleryImages[i % galleryImages.length]})`;
+  div.style.backgroundSize = "cover";
+  div.style.backgroundPosition = "center";
+
+  div.addEventListener("click", () => {
+    openImagePage(galleryImages[i % galleryImages.length]);
+  });
+});
+
+
+
+
+
+
+function openImagePage(imgSrc) {
+  const newWin = window.open("", "_blank");
+  newWin.document.title = "Image View";
+
+  // नए विंडो में HTML और CSS को सीधे लिखें
+  newWin.document.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Image View</title>
+      <style>
+        body { 
+          margin:0; 
+          padding:0;
+          font-family:Arial; 
+          background:#f0f0f0; 
+        }
+        .main-img {
+          width: 100%;
+          height: 350px;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          border-bottom: 2px solid black;
+        }
+        .thumbs {
+          display: grid;
+          gap: 5px;
+          padding: 10px;
+        }
+        .thumb {
+          height: 300px;
+          background-size: cover;
+          background-position: center;
+          border: 2px solid white;
+          cursor: pointer;
+        }
+        @media (min-width: 601px) {
+          .thumbs {
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+        @media (max-width: 600px) {
+          .thumbs {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="main-img" id="main"></div>
+      <div class="thumbs" id="thumbs"></div>
+      <script>
+        const allImages = ${JSON.stringify(galleryImages)};
+        const mainEl = document.getElementById("main");
+        const thumbsEl = document.getElementById("thumbs");
+
+        function showImage(src) {
+          mainEl.style.backgroundImage = "url(" + src + ")";
+          thumbsEl.innerHTML = "";
+          const thumbs = allImages.filter(s => s !== src); 
+          thumbs.slice(0, 4).forEach(t => { 
+            const div = document.createElement("div");
+            div.className = "thumb";
+            div.style.backgroundImage = "url(" + t + ")";
+            div.onclick = () => showImage(t);
+            thumbsEl.appendChild(div);
+          });
+        }
+        showImage("${imgSrc}");
+      <\/script>
+    </body>
+    </html>
+  `);
+  newWin.document.close();
+}
+
+</script>
+</body>
+</html>
