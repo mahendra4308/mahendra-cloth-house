@@ -407,6 +407,7 @@ document.addEventListener("click", (e) => {
 
 
 
+
 const galleryImages = [
   "https://picsum.photos/id/1015/900/450",
   "https://picsum.photos/id/1016/900/450",
@@ -418,27 +419,26 @@ const galleryImages = [
   "https://picsum.photos/id/1035/900/450"
 ];
 
-// Assign images to grid
+// grid में इमेज असाइन करें
 document.querySelectorAll(".img1").forEach((div, i) => {
-  div.style.backgroundImage = `url(${galleryImages[i % galleryImages.length]})`;
-  div.style.backgroundSize = "cover";
-  div.style.backgroundPosition = "center";
+  // इमेज को div के background की बजाय<img> टैग में लोड करें
+  const img = document.createElement('img');
+  img.src = galleryImages[i % galleryImages.length];
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  div.appendChild(img);
 
   div.addEventListener("click", () => {
     openImagePage(galleryImages[i % galleryImages.length]);
   });
 });
 
-
-
-
-
-
 function openImagePage(imgSrc) {
   const newWin = window.open("", "_blank");
   newWin.document.title = "Image View";
 
-  // नए विंडो में HTML और CSS को सीधे लिखें
+  // नए विंडो में पूरा HTML स्ट्रक्चर बनाएं
   newWin.document.write(`
     <!DOCTYPE html>
     <html lang="en">
@@ -447,71 +447,68 @@ function openImagePage(imgSrc) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Image View</title>
       <style>
-        body { 
-          margin:0; 
-          padding:0;
-          font-family:Arial; 
-          background:#f0f0f0; 
-        }
-        .main-img {
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #f0f0f0; }
+        .main-img-container {
           width: 100%;
-          height: 350px;
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          border-bottom: 2px solid black;
+          height: 400px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: black;
+          border-bottom: 2px solid #ccc;
         }
-        .thumbs {
-          display: grid;
-          gap: 5px;
-          padding: 10px;
-        }
-        .thumb {
-          height: 300px;
+        .main-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .thumbnails-container { display: grid; gap: 5px; padding: 5px; }
+        .thumbnail {
+          width: 100%;
+          height: 200px;
           background-size: cover;
           background-position: center;
           border: 2px solid white;
           cursor: pointer;
         }
-        @media (min-width: 601px) {
-          .thumbs {
-            grid-template-columns: repeat(4, 1fr);
-          }
-        }
-        @media (max-width: 600px) {
-          .thumbs {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
+        @media (min-width: 601px) { .thumbnails-container { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 600px) { .thumbnails-container { grid-template-columns: repeat(2, 1fr); } }
       </style>
     </head>
     <body>
-      <div class="main-img" id="main"></div>
-      <div class="thumbs" id="thumbs"></div>
+      <div class="main-img-container">
+        <img id="mainImage" class="main-img" src="${imgSrc}" alt="Main Image">
+      </div>
+      <div class="thumbnails-container" id="thumbnailsContainer"></div>
       <script>
         const allImages = ${JSON.stringify(galleryImages)};
-        const mainEl = document.getElementById("main");
-        const thumbsEl = document.getElementById("thumbs");
+        const thumbnailsContainer = document.getElementById("thumbnailsContainer");
 
-        function showImage(src) {
-          mainEl.style.backgroundImage = "url(" + src + ")";
-          thumbsEl.innerHTML = "";
-          const thumbs = allImages.filter(s => s !== src); 
-          thumbs.slice(0, 4).forEach(t => { 
+        function getRandomImages(currentImgSrc) {
+          const filteredImages = allImages.filter(src => src !== currentImgSrc);
+          const shuffledImages = filteredImages.sort(() => 0.5 - Math.random());
+          return shuffledImages.slice(0, 4);
+        }
+
+        function renderThumbnails(mainImgSrc) {
+          const randomThumbs = getRandomImages(mainImgSrc);
+          thumbnailsContainer.innerHTML = '';
+          randomThumbs.forEach(src => {
             const div = document.createElement("div");
-            div.className = "thumb";
-            div.style.backgroundImage = "url(" + t + ")";
-            div.onclick = () => showImage(t);
-            thumbsEl.appendChild(div);
+            div.className = "thumbnail";
+            div.style.backgroundImage = 'url(' + src + ')';
+            div.onclick = () => {
+              // जब थंबनेल पर क्लिक हो, तो नया पेज खुलेगा
+              const newUrl = window.location.href.split('?')[0] + '?img=' + encodeURIComponent(src);
+              window.location.href = newUrl;
+            };
+            thumbnailsContainer.appendChild(div);
           });
         }
-        showImage("${imgSrc}");
+        renderThumbnails("${imgSrc}");
       <\/script>
     </body>
     </html>
   `);
   newWin.document.close();
 }
+
 
 </script>
 </body>
